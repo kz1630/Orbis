@@ -37,16 +37,8 @@ git clone <repository-url>
 cd Orbis
 ```
 
-2. Откройте проект в Visual Studio:
-```bash
-cd Orbis
-```
-
-3. Восстановите зависимости:
-```bash
-dotnet restore
-```
-
+2. Откройте проект в Visual Studio
+3. Восстановите зависимости
 4. Запустите приложение (F5 в Visual Studio)
 
 ## Тестовые учетные записи
