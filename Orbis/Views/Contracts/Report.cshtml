@@ -1,0 +1,131 @@
+@model IEnumerable<Orbis.Models.Contract>
+
+@{
+    ViewData["Title"] = "Отчет по договорам";
+}
+
+<h1>Отчет по договорам за период</h1>
+
+<form method="get" class="mb-4">
+    <div class="card">
+        <div class="card-header">
+            <h5>Выберите период</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Дата начала</label>
+                    <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate" />
+                </div>
+                <div class="col-md-4">
+                    <label>Дата окончания</label>
+                    <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate" />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Сформировать отчет</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Всего договоров</h5>
+                <h2>@ViewBag.TotalCount</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Общая сумма</h5>
+                <h2>@(((decimal)ViewBag.TotalAmount).ToString("C"))</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    <h3>Детализация</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Дата</th>
+                <th>Клиент</th>
+                <th>Услуга</th>
+                <th>Период действия</th>
+                <th>Сумма</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model)
+    {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ContractNumber)</td>
+                <td>@item.ContractDate.ToShortDateString()</td>
+                <td>@Html.DisplayFor(modelItem => item.Person.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.InsuranceService.Name)</td>
+                <td>@item.StartDate.ToShortDateString() - @item.EndDate.ToShortDateString()</td>
+                <td>@item.Amount.ToString("C")</td>
+                <td>
+                    @if (item.Status == "Активный")
+                    {
+                        <span class="badge bg-success">@item.Status</span>
+                    }
+                    else if (item.Status == "Просрочен")
+                    {
+                        <span class="badge bg-danger">@item.Status</span>
+                    }
+                    else if (item.Status == "Завершен")
+                    {
+                        <span class="badge bg-secondary">@item.Status</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">@item.Status</span>
+                    }
+                </td>
+            </tr>
+    }
+        </tbody>
+        <tfoot>
+            <tr class="table-info">
+                <td colspan="5" class="text-end"><strong>Итого:</strong></td>
+                <td><strong>@(((decimal)ViewBag.TotalAmount).ToString("C"))</strong></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <div class="mt-3">
+        <h4>Статистика по статусам</h4>
+        <table class="table table-sm w-50">
+            <tbody>
+                @foreach (var statusGroup in Model.GroupBy(c => c.Status))
+                {
+                    <tr>
+                        <td>@statusGroup.Key</td>
+                        <td>@statusGroup.Count() шт.</td>
+                        <td>@statusGroup.Sum(c => c.Amount).ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        За выбранный период договоров не найдено.
+    </div>
+}
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку договоров</a>
+</div>

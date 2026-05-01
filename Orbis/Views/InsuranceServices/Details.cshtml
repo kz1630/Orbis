@@ -1,0 +1,75 @@
+@model Orbis.Models.InsuranceService
+
+@{
+    ViewData["Title"] = "Детали услуги";
+}
+
+<h1>Детали услуги страхования</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Название</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+        
+        <dt class="col-sm-3">Описание</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Description)</dd>
+        
+        <dt class="col-sm-3">Категория</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Category)</dd>
+        
+        <dt class="col-sm-3">Стоимость</dt>
+        <dd class="col-sm-9">@Model.Cost.ToString("C")</dd>
+        
+        <dt class="col-sm-3">Срок действия</dt>
+        <dd class="col-sm-9">@Model.DurationMonths месяцев</dd>
+        
+        <dt class="col-sm-3">Статус</dt>
+        <dd class="col-sm-9">
+            @if (Model.IsActive)
+            {
+                <span class="badge bg-success">Активна</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary">Неактивна</span>
+            }
+        </dd>
+        
+        <dt class="col-sm-3">Дата создания</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedAt)</dd>
+    </dl>
+</div>
+
+@if (Model.Contracts != null && Model.Contracts.Any())
+{
+    <h3>Договоры по этой услуге</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Клиент</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contract in Model.Contracts)
+            {
+                <tr>
+                    <td>@contract.ContractNumber</td>
+                    <td>@contract.Person?.Name</td>
+                    <td>@contract.ContractDate.ToShortDateString()</td>
+                    <td>@contract.Status</td>
+                    <td>@contract.Amount.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Изменить</a>
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+</div>

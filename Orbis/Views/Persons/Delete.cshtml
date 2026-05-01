@@ -1,0 +1,34 @@
+@model Orbis.Models.Person
+
+@{
+    ViewData["Title"] = "Удалить лицо";
+}
+
+<h1>Удалить лицо</h1>
+
+<h3>Вы уверены, что хотите удалить это лицо?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Тип лица</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PersonType)</dd>
+        
+        <dt class="col-sm-3">Наименование/ФИО</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+        
+        <dt class="col-sm-3">ИНН</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.INN)</dd>
+        
+        <dt class="col-sm-3">Телефон</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Phone)</dd>
+        
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+    </form>
+</div>

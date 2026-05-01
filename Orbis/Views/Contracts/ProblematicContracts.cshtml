@@ -1,0 +1,100 @@
+@model IEnumerable<Orbis.Models.Contract>
+
+@{
+    ViewData["Title"] = "Проблемные договоры";
+}
+
+<h1>Проблемные договоры</h1>
+
+<div class="alert alert-warning">
+    <strong>Внимание!</strong> Здесь отображаются договоры, требующие внимания:
+    <ul>
+        <li>Активные договоры с истекшим сроком действия</li>
+        <li>Договоры со статусом "Просрочен"</li>
+        <li>Активные договоры, срок которых истекает в течение 30 дней</li>
+    </ul>
+</div>
+
+<p>
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку всех договоров</a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-success">
+        <strong>Отлично!</strong> Проблемных договоров не найдено.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Клиент</th>
+                <th>Услуга</th>
+                <th>Дата окончания</th>
+                <th>Сумма</th>
+                <th>Статус</th>
+                <th>Проблема</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model)
+    {
+        var today = DateTime.Now;
+        var daysUntilEnd = (item.EndDate - today).Days;
+        string problemType = "";
+        string rowClass = "";
+        
+        if (item.Status == "Просрочен")
+        {
+            problemType = "Просрочен";
+            rowClass = "table-danger";
+        }
+        else if (item.Status == "Активный" && item.EndDate < today)
+        {
+            problemType = "Истек срок действия";
+            rowClass = "table-danger";
+        }
+        else if (item.Status == "Активный" && daysUntilEnd <= 30 && daysUntilEnd >= 0)
+        {
+            problemType = $"Истекает через {daysUntilEnd} дн.";
+            rowClass = "table-warning";
+        }
+        
+            <tr class="@rowClass">
+                <td>@Html.DisplayFor(modelItem => item.ContractNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.Person.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.InsuranceService.Name)</td>
+                <td>@item.EndDate.ToShortDateString()</td>
+                <td>@item.Amount.ToString("C")</td>
+                <td>
+                    @if (item.Status == "Активный")
+                    {
+                        <span class="badge bg-success">@item.Status</span>
+                    }
+                    else if (item.Status == "Просрочен")
+                    {
+                        <span class="badge bg-danger">@item.Status</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">@item.Status</span>
+                    }
+                </td>
+                <td><strong>@problemType</strong></td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Изменить</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Детали</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+    
+    <div class="alert alert-info mt-3">
+        <strong>Всего проблемных договоров:</strong> @Model.Count()
+    </div>
+}

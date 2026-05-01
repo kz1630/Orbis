@@ -1,0 +1,37 @@
+@model Orbis.Models.Contract
+
+@{
+    ViewData["Title"] = "Удалить договор";
+}
+
+<h1>Удалить договор страхования</h1>
+
+<h3>Вы уверены, что хотите удалить этот договор?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Номер договора</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.ContractNumber)</dd>
+        
+        <dt class="col-sm-3">Клиент</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Person.Name)</dd>
+        
+        <dt class="col-sm-3">Услуга</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.InsuranceService.Name)</dd>
+        
+        <dt class="col-sm-3">Дата заключения</dt>
+        <dd class="col-sm-9">@Model.ContractDate.ToShortDateString()</dd>
+        
+        <dt class="col-sm-3">Сумма</dt>
+        <dd class="col-sm-9">@Model.Amount.ToString("C")</dd>
+        
+        <dt class="col-sm-3">Статус</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Status)</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+    </form>
+</div>

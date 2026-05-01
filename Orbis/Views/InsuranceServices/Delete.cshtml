@@ -1,0 +1,31 @@
+@model Orbis.Models.InsuranceService
+
+@{
+    ViewData["Title"] = "Удалить услугу";
+}
+
+<h1>Удалить услугу страхования</h1>
+
+<h3>Вы уверены, что хотите удалить эту услугу?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Название</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+        
+        <dt class="col-sm-3">Категория</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Category)</dd>
+        
+        <dt class="col-sm-3">Стоимость</dt>
+        <dd class="col-sm-9">@Model.Cost.ToString("C")</dd>
+        
+        <dt class="col-sm-3">Срок действия</dt>
+        <dd class="col-sm-9">@Model.DurationMonths месяцев</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+    </form>
+</div>

@@ -1,0 +1,31 @@
+@model Orbis.Models.User
+
+@{
+    ViewData["Title"] = "Детали пользователя";
+}
+
+<h1>Детали пользователя</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Логин</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Username)</dd>
+        
+        <dt class="col-sm-3">ФИО</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.FullName)</dd>
+        
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+        
+        <dt class="col-sm-3">Роль</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Role)</dd>
+        
+        <dt class="col-sm-3">Дата создания</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedAt)</dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Изменить</a>
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+</div>

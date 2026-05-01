@@ -1,0 +1,69 @@
+@model Orbis.Models.Person
+
+@{
+    ViewData["Title"] = "Редактировать лицо";
+}
+
+<h1>Редактировать лицо</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <div class="form-group mb-3">
+                <label asp-for="PersonType" class="control-label">Тип лица</label>
+                <select asp-for="PersonType" class="form-control">
+                    <option value="Физическое">Физическое лицо</option>
+                    <option value="Юридическое">Юридическое лицо</option>
+                </select>
+                <span asp-validation-for="PersonType" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label">Наименование/ФИО</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="INN" class="control-label">ИНН</label>
+                <input asp-for="INN" class="form-control" />
+                <span asp-validation-for="INN" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PassportSeries" class="control-label">Серия паспорта</label>
+                <input asp-for="PassportSeries" class="form-control" />
+                <span asp-validation-for="PassportSeries" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PassportNumber" class="control-label">Номер паспорта</label>
+                <input asp-for="PassportNumber" class="form-control" />
+                <span asp-validation-for="PassportNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Address" class="control-label">Адрес</label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Phone" class="control-label">Телефон</label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="control-label">Email</label>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

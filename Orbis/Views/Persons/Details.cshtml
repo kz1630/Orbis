@@ -1,0 +1,70 @@
+@model Orbis.Models.Person
+
+@{
+    ViewData["Title"] = "Детали лица";
+}
+
+<h1>Детали лица</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Тип лица</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PersonType)</dd>
+        
+        <dt class="col-sm-3">Наименование/ФИО</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+        
+        <dt class="col-sm-3">ИНН</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.INN)</dd>
+        
+        <dt class="col-sm-3">Серия паспорта</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PassportSeries)</dd>
+        
+        <dt class="col-sm-3">Номер паспорта</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PassportNumber)</dd>
+        
+        <dt class="col-sm-3">Адрес</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Address)</dd>
+        
+        <dt class="col-sm-3">Телефон</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Phone)</dd>
+        
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+        
+        <dt class="col-sm-3">Дата создания</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedAt)</dd>
+    </dl>
+</div>
+
+@if (Model.Contracts != null && Model.Contracts.Any())
+{
+    <h3>Договоры</h3>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contract in Model.Contracts)
+            {
+                <tr>
+                    <td>@contract.ContractNumber</td>
+                    <td>@contract.ContractDate.ToShortDateString()</td>
+                    <td>@contract.Status</td>
+                    <td>@contract.Amount.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Изменить</a>
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+</div>

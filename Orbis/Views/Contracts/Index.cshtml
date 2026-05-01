@@ -1,0 +1,123 @@
+@model IEnumerable<Orbis.Models.Contract>
+
+@{
+    ViewData["Title"] = "Договоры страхования";
+}
+
+<h1>Договоры страхования</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Создать договор</a>
+    <a asp-action="Report" class="btn btn-info">Отчет по периоду</a>
+    <a asp-action="ProblematicContracts" class="btn btn-warning">Проблемные договоры</a>
+</p>
+
+<form method="get" class="mb-4">
+    <div class="card">
+        <div class="card-header">
+            <h5>Поиск и фильтрация</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <label>Номер договора</label>
+                    <input type="text" name="searchNumber" class="form-control" value="@Context.Request.Query["searchNumber"]" />
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label>Клиент</label>
+                    <select name="personId" class="form-control">
+                        <option value="">-- Все --</option>
+                        @foreach (var person in ViewBag.Persons as SelectList)
+                        {
+                            <option value="@person.Value" selected="@(person.Value == Context.Request.Query["personId"])">@person.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label>Услуга</label>
+                    <select name="serviceId" class="form-control">
+                        <option value="">-- Все --</option>
+                        @foreach (var service in ViewBag.Services as SelectList)
+                        {
+                            <option value="@service.Value" selected="@(service.Value == Context.Request.Query["serviceId"])">@service.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label>Статус</label>
+                    <select name="status" class="form-control">
+                        <option value="">-- Все --</option>
+                        <option value="Активный" selected="@(Context.Request.Query["status"] == "Активный")">Активный</option>
+                        <option value="Завершен" selected="@(Context.Request.Query["status"] == "Завершен")">Завершен</option>
+                        <option value="Просрочен" selected="@(Context.Request.Query["status"] == "Просрочен")">Просрочен</option>
+                        <option value="Расторгнут" selected="@(Context.Request.Query["status"] == "Расторгнут")">Расторгнут</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <label>Дата с</label>
+                    <input type="date" name="startDate" class="form-control" value="@Context.Request.Query["startDate"]" />
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label>Дата по</label>
+                    <input type="date" name="endDate" class="form-control" value="@Context.Request.Query["endDate"]" />
+                </div>
+                <div class="col-md-6 mb-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success me-2">Найти</button>
+                    <a asp-action="Index" class="btn btn-secondary">Сбросить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Номер</th>
+            <th>Клиент</th>
+            <th>Услуга</th>
+            <th>Дата договора</th>
+            <th>Период действия</th>
+            <th>Сумма</th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.ContractNumber)</td>
+            <td>@Html.DisplayFor(modelItem => item.Person.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.InsuranceService.Name)</td>
+            <td>@item.ContractDate.ToShortDateString()</td>
+            <td>@item.StartDate.ToShortDateString() - @item.EndDate.ToShortDateString()</td>
+            <td>@item.Amount.ToString("C")</td>
+            <td>
+                @if (item.Status == "Активный")
+                {
+                    <span class="badge bg-success">@item.Status</span>
+                }
+                else if (item.Status == "Просрочен")
+                {
+                    <span class="badge bg-danger">@item.Status</span>
+                }
+                else if (item.Status == "Завершен")
+                {
+                    <span class="badge bg-secondary">@item.Status</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">@item.Status</span>
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Изменить</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Детали</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
