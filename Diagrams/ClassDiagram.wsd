@@ -1,0 +1,65 @@
+@startuml Orbis_ClassDiagram
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam classBackgroundColor #F0F0F0
+skinparam classBorderColor #333333
+
+class User {
+    - Id: int
+    - Username: string
+    - Password: string
+    - Role: string
+    - FullName: string
+    - Email: string
+    - CreatedAt: DateTime
+}
+
+class Person {
+    - Id: int
+    - PersonType: string
+    - Name: string
+    - INN: string
+    - PassportSeries: string?
+    - PassportNumber: string?
+    - Address: string
+    - Phone: string
+    - Email: string
+    - CreatedAt: DateTime
+    - Contracts: ICollection<Contract>
+}
+
+class InsuranceService {
+    - Id: int
+    - Name: string
+    - Description: string
+    - Cost: decimal
+    - DurationMonths: int
+    - Category: string
+    - IsActive: bool
+    - CreatedAt: DateTime
+    - Contracts: ICollection<Contract>
+}
+
+class Contract {
+    - Id: int
+    - ContractNumber: string
+    - ContractDate: DateTime
+    - StartDate: DateTime
+    - EndDate: DateTime
+    - Amount: decimal
+    - Status: string
+    - Notes: string
+    - CreatedAt: DateTime
+    - PersonId: int
+    - InsuranceServiceId: int
+    - CreatedByUserId: int?
+    - Person: Person
+    - InsuranceService: InsuranceService
+    - CreatedByUser: User
+}
+
+Person "1" -- "*" Contract : has
+InsuranceService "1" -- "*" Contract : provides
+User "0..1" -- "*" Contract : creates
+
+@enduml

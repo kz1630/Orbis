@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Orbis.Models;
 using Orbis.Filters;
+using Orbis.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +25,11 @@ builder.Services.AddDbContext<OrbisDbContext>(options =>
 
 var app = builder.Build();
 
-// Ensure database is created
+// Initialize database with test data
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<OrbisDbContext>();
-    dbContext.Database.EnsureCreated();
+    DbInitializer.Initialize(dbContext);
 }
 
 // Configure the HTTP request pipeline.

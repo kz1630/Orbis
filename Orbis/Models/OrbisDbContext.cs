@@ -34,19 +34,6 @@ namespace Orbis.Models
                 .WithMany()
                 .HasForeignKey(c => c.CreatedByUserId)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = 1,
-                    Username = "admin",
-                    Password = "admin123",
-                    Role = "Admin",
-                    FullName = "Администратор",
-                    Email = "admin@orbis.ru",
-                    CreatedAt = DateTime.Now
-                }
-            );
         }
     }
 }
