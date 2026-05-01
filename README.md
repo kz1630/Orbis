@@ -16,7 +16,7 @@
 
 ## Технологический стек
 
-- **Backend:** ASP.NET Core 8.0 MVC
+- **Backend:** ASP.NET Core 10.0 MVC
 - **Database:** SQLite
 - **ORM:** Entity Framework Core
 - **Frontend:** Bootstrap 5, jQuery
