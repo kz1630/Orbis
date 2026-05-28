@@ -56,6 +56,6 @@ namespace Orbis.Models
         [Display(Name = "Создал")]
         public int? CreatedByUserId { get; set; }
         [ForeignKey("CreatedByUserId")]
-        public User CreatedByUser { get; set; }
+        public User? CreatedByUser { get; set; }
     }
 }

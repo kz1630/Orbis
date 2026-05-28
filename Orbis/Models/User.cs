@@ -31,5 +31,12 @@ namespace Orbis.Models
 
         [Display(Name = "Дата создания")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [Display(Name = "Связанное лицо")]
+        public int? PersonId { get; set; }
+
+        public Person Person { get; set; }
+
+        public ICollection<Contract> CreatedContracts { get; set; }
     }
 }

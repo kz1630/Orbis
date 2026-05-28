@@ -17,6 +17,12 @@ namespace Orbis.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Person)
+                .WithOne(p => p.User)
+                .HasForeignKey<User>(u => u.PersonId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<Contract>()
                 .HasOne(c => c.Person)
                 .WithMany(p => p.Contracts)
@@ -31,7 +37,7 @@ namespace Orbis.Models
 
             modelBuilder.Entity<Contract>()
                 .HasOne(c => c.CreatedByUser)
-                .WithMany()
+                .WithMany(u => u.CreatedContracts)
                 .HasForeignKey(c => c.CreatedByUserId)
                 .OnDelete(DeleteBehavior.SetNull);
         }

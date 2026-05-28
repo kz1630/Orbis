@@ -45,6 +45,8 @@ namespace Orbis.Models
         [Display(Name = "Дата создания")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        public User User { get; set; }
+
         public ICollection<Contract> Contracts { get; set; }
     }
 }

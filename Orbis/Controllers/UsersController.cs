@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Orbis.Models;
 
@@ -15,7 +16,10 @@ namespace Orbis.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            var users = _context.Users
+                .Include(u => u.Person);
+
+            return View(await users.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -25,7 +29,7 @@ namespace Orbis.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _context.Users.Include(u => u.Person).FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -36,20 +40,34 @@ namespace Orbis.Controllers
 
         public IActionResult Create()
         {
+            ViewData["PersonId"] = new SelectList(
+                _context.Persons,
+                "Id",
+                "Name"
+            );
+
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,Password,Role,FullName,Email")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Username,Password,Role,FullName,Email,PersonId")]User user)
         {
             if (ModelState.IsValid)
             {
-                user.CreatedAt = DateTime.Now;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["PersonId"] = new SelectList(
+                _context.Persons,
+                "Id",
+                "Name",
+                user.PersonId
+            );
+
             return View(user);
         }
 
@@ -60,17 +78,24 @@ namespace Orbis.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.Include(u => u.Person).FirstOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
                 return NotFound();
             }
+
+            ViewData["PersonId"] = new SelectList(
+                _context.Persons,
+                "Id",
+                "Name",
+                user.PersonId
+            );  
             return View(user);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Password,Role,FullName,Email,CreatedAt")] User user)
+        public async Task<IActionResult> Edit(int id,[Bind("Id,Username,Password,Role,FullName,Email,PersonId")]User user)
         {
             if (id != user.Id)
             {
@@ -86,17 +111,24 @@ namespace Orbis.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!_context.Users.Any(e => e.Id == user.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["PersonId"] = new SelectList(
+                _context.Persons,
+                "Id",
+                "Name",
+                user.PersonId
+            );
+
             return View(user);
         }
 
@@ -107,7 +139,7 @@ namespace Orbis.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _context.Users.Include(u => u.Person).FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
