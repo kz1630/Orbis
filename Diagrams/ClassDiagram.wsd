@@ -12,6 +12,9 @@ class User {
     - FullName: string
     - Email: string
     - CreatedAt: DateTime
+
+    - PersonId: int
+    - Person: Person
 }
 
 class Person {
@@ -25,6 +28,8 @@ class Person {
     - Phone: string
     - Email: string
     - CreatedAt: DateTime
+
+    - User: User
     - Contracts: ICollection<Contract>
 }
 
@@ -50,9 +55,11 @@ class Contract {
     - Status: string
     - Notes: string
     - CreatedAt: DateTime
+
     - PersonId: int
     - InsuranceServiceId: int
     - CreatedByUserId: int?
+
     - Person: Person
     - InsuranceService: InsuranceService
     - CreatedByUser: User
@@ -61,5 +68,7 @@ class Contract {
 Person "1" -- "*" Contract : has
 InsuranceService "1" -- "*" Contract : provides
 User "0..1" -- "*" Contract : creates
+
+Person "1" -- "0..1" User : account
 
 @enduml
