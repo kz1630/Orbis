@@ -1,25 +1,57 @@
 @startuml Orbis_ClassDiagram
+
 !theme plain
 skinparam backgroundColor #FEFEFE
 skinparam classBackgroundColor #F0F0F0
 skinparam classBorderColor #333333
 
+enum UserRole {
+    Admin
+    Manager
+    Operator
+}
+
+enum PersonType {
+    Individual
+    LegalEntity
+}
+
+enum ContractStatus {
+    Draft
+    Active
+    Expired
+    Cancelled
+}
+
+enum ServiceCategory {
+    Health
+    Property
+    Vehicle
+    Travel
+    Other
+}
+
 class User {
     - Id: int
     - Username: string
     - Password: string
-    - Role: string
+    - Role: UserRole
     - FullName: string
     - Email: string
     - CreatedAt: DateTime
 
-    - PersonId: int
-    - Person: Person
+    + CreatePerson(): Person
+    + CreateContract(): Contract
+    + UpdatePerson(): void
+    + CancelContract(): void
+
+    - Persons: ICollection<Person>
+    - CreatedContracts: ICollection<Contract>
 }
 
 class Person {
     - Id: int
-    - PersonType: string
+    - PersonType: PersonType
     - Name: string
     - INN: string
     - PassportSeries: string?
@@ -29,7 +61,13 @@ class Person {
     - Email: string
     - CreatedAt: DateTime
 
-    - User: User
+    - RegisteredByUserId: int
+
+    + UpdateInfo(): void
+    + GetActiveContracts(): ICollection<Contract>
+    + AddContract(): Contract
+
+    - RegisteredByUser: User
     - Contracts: ICollection<Contract>
 }
 
@@ -39,9 +77,14 @@ class InsuranceService {
     - Description: string
     - Cost: decimal
     - DurationMonths: int
-    - Category: string
+    - Category: ServiceCategory
     - IsActive: bool
     - CreatedAt: DateTime
+
+    + Activate(): void
+    + Deactivate(): void
+    + ChangePrice(): void
+
     - Contracts: ICollection<Contract>
 }
 
@@ -52,23 +95,32 @@ class Contract {
     - StartDate: DateTime
     - EndDate: DateTime
     - Amount: decimal
-    - Status: string
+    - Status: ContractStatus
     - Notes: string
     - CreatedAt: DateTime
 
     - PersonId: int
     - InsuranceServiceId: int
-    - CreatedByUserId: int?
+    - CreatedByUserId: int
+
+    + Conclude(): void
+    + Extend(): void
+    + Cancel(): void
+    + CalculateAmount(): decimal
 
     - Person: Person
     - InsuranceService: InsuranceService
     - CreatedByUser: User
 }
 
+User "1" -- "*" Person : registers
 Person "1" -- "*" Contract : has
-InsuranceService "1" -- "*" Contract : provides
-User "0..1" -- "*" Contract : creates
+InsuranceService "1" -- "*" Contract : used in
+User "1" -- "*" Contract : creates
 
-Person "1" -- "0..1" User : account
+User ..> UserRole
+Person ..> PersonType
+Contract ..> ContractStatus
+InsuranceService ..> ServiceCategory
 
 @enduml
